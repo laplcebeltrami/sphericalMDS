@@ -16,7 +16,10 @@
 %The real brain network data will likely to have 10000 nodes per
 %hemisphere. 
 
-load fMRInetwork-5000nodes.mat 
+load fMRInetwork-5000nodes-beta.mat 
+rho=betalin*betalin';  %This is coefficiens of degree 120 cosine series 
+                      %expansion on rsfMRI. See above paper for detail
+
 figure; imagesc(rho); colormap('jet'); colorbar
 caxis([-1 1]) %This is fixed such that to show the symmetric range in correlation
 %Unless there is motivation/need, always display correlation symmetrically.
@@ -35,7 +38,7 @@ figure_bigger(16)
 orig = real(acos(rho));
 embed =real(acos(Y'*Y)); 
 sc = embed_shepard(orig, embed)
-%Spearman rank correlation gives really good performance 0.9769
+%Number is Pearson correlation
 
 axis square; %if you want latex formula displayed. 
 xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
@@ -55,14 +58,25 @@ figure_bigger(16)
 orig = real(acos(rho));
 embed =real(acos(Y'*Y)); 
 sc = embed_shepard(orig, embed)
-%Spearman rank correlation gives really good performance 0.9577
+%Number is Pearson correlation
+
 
 axis square; %if you want latex formula displayed. 
 xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
 ylabel('Spherical MDS')
 
-%As the embedding dimension decreases, the performance will suffer. 
+%As the embedding dimension decreases, the performance will suffer and
+%Pearson correlation will decreases.
 
+%% To Do list
+% Need a new visulziation function displaying connected edges of MST of correlation network.
+% You only need to colore corresponding edges differently. 
+% There is no gurantee edges in Delaunay triangulation matches the edges in
+% edges of MST of correlation network. This needs to work out
+
+%For circle, we need visualization pipeline like:
+%https://www.pnas.org/doi/10.1073/pnas.1008054107
+%There are bunch of existing codes doing this. 
 
 %% Incomplete. 
 % SPHARM modeling requires building spherical mesh
@@ -80,11 +94,7 @@ embeded.faces=faces;
 figure;figure_wire(embeded, 'black', 'white');
 
 
-%% To Do list
-% Need a new visulziation function displaying connected edges of MST of correlation network.
-% You only need to colore corresponding edges differently. 
-% There is no gurantee edges in Delaunay triangulation matches the edges in
-% edges of MST of correlation network. This needs to work out.
+.
 
 
 
