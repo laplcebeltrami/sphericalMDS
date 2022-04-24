@@ -17,10 +17,15 @@ function Y = embed_sphere(rho,k)
 % (C) 2022 Moo K. Chung
 % University of Wisconsin-Madison
 %
-% Last update: April 12, 2022
-
+% Update history
+%    April 12, 2022 created
+%    April 24, 2022 svm.m replaced with svms.m for large-scale computation
+ 
 p= size(rho,1); %size of correlation matrix.
-[Ut eta U] = svd(rho); %Since digonal is identiy matrix, SVD behaves well. 
+
+%SVD: Since digonal is identiy matrix, SVD behaves well. 
+[Ut eta U] = svds(rho, k+1); %returns the k largest singular values.
+%[Ut eta U] = svd(rho); %older code is extremly slow since it computes all the eigenvectors. 
 Deta = diag(eta);
 %Diagnostic plot
 %lambda = diag(eta);
@@ -29,7 +34,7 @@ Deta = diag(eta);
 %figure_bigger(16)
 
 %Computing squared diagonal matrix up to k+1 number of eigenvectors. 
-sqrteta = zeros(p,p);
+sqrteta = zeros(k+1,k+1);
 for i=1:k+1
     sqrteta(i,i) = sqrt(Deta(i));
 end
