@@ -37,7 +37,7 @@ figure_bg('w'); figure_bigger(16)
 orig = real(acos(rho));
 embed =real(acos(Y'*Y)); 
 sc = embed_shepard(orig, embed)
-%Number is Pearson correlation
+%Number 0.5148 is Pearson correlation
 
 axis square; %if you want latex formula displayed. 
 xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
@@ -55,7 +55,7 @@ figure_bg('w'); figure_bigger(16)
 orig = real(acos(rho));
 embed =real(acos(Y'*Y)); 
 sc = embed_shepard(orig, embed)
-% Number is Pearson correlation
+% Number 0.4125 is Pearson correlation
 
 axis square; %if you want latex formula displayed. 
 xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
@@ -69,30 +69,34 @@ ylabel('Spherical MDS')
 % This part requires calling functions in subfolder /hyperbolic-MDS
 % written by Zhou and Sharpee.
 
-orig = (1-rho)/2;
-%% Question 1  orig = real(acos(rho)) is the correlation metric used in the paper.
-%% But the code below produce error if it is used. How to fix this?
-
+orig = real(acos(rho));
 N = size(orig,1);
 for i =1:N
-    orig(i,i)=1; 
-%% Question 2 Why making diagonal 1? It is no longer a distance matrix then.     
+    orig(i,i)=0;      
 end
 orig(orig<0)=0.01;
 
 Rmax = 20; % The maximum radius of the Poincare disk
-[Y,~,~,~] = fmdscale_hyperbolic(D,2,Rmax,0); % Do hyperbolic MDS
-
+%add path 'hperbolic-MDS' where fmdscale_hyperbolic.m is located;
+[Y,~,~,~] = fmdscale_hyperbolic(orig,2,Rmax,0); % Do hyperbolic MDS
 figure; polarscatter(Y(:,2),Y(:,1)-Rmax+1,'.k') 
 figure_bg('w'); figure_bigger(16)
+rlim
+rticklabels([19 19.05 19.1 19.15 19.2])
 
+%% To be fixed
+%embed_display_hyperbolic.m is not displaying correctly
+%figure; embed_display_hyperbolic(Y,Rmax) % kernel density plot
+%figure_bg('w'); figure_bigger(16); colorbar
 
-figure; embed_display_hyperbolic(Y,Rmax) % density plot
-figure_bg('w'); figure_bigger(16); colorbar
+% Shepard diagram
+orig = real(acos(rho));
+embed =real(acos(Y'*Y)); 
+sc = embed_shepard(orig, embed)
+% Number 0.4125 is Pearson correlation
 
 %As the embedding dimension decreases, the performance will suffer and
 %Pearson correlation will decreases.
-
 
 %% Incomplete. 
 % SPHARM modeling requires building spherical mesh
