@@ -11,9 +11,7 @@ function sc = embed_shepard(orig, embed)
 % embed: embeded distance matrix
 %
 % OUTPUT:
-% sc:  The Spearman rank correlation computed as the Pearson correlation
-%      of ranked data.The Perason correlation used in the paper is not efficient.
-%      The Better measure is Spearman rank correlation. 
+% sc:  The Perason correlation used to measure the goodness of fit
 %
 % (C) 2022 Moo K. Chung
 % University of Wisconsin-Madison
@@ -23,7 +21,7 @@ function sc = embed_shepard(orig, embed)
 
 x=orig(:);
 y=embed(:);
-sc = corr(sort(x),sort(y)); %Spearman rank correlation
+sc = corr(x,y); %Pearson correlation
 
 figure; plot(x, y,'.','MarkerEdgeColor',[0.7 0.7 0.7]);
 hold on; plot(x(1:500), y(1:500),'.r'); 
