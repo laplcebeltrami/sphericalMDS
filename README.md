@@ -7,4 +7,4 @@ Abstract: Human brain activity is often measured using the blood-oxygen-level de
 
 The codes performs the spherical- and hyperbolic-MDS explained in https://arxiv.org/abs/2204.03653. Run script.m
 
-(C) Codes are written by Moo K. Chung and Zijian Chen of University of Wisconsin-Madison.
+(C) 2022 Codes are written by Moo K. Chung and Zijian Chen of University of Wisconsin-Madison.
