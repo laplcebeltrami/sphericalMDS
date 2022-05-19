@@ -10,7 +10,8 @@
 % University of Wisconsin-Madison
 %
 % Created    : April  1, 2022
-% Last update: April 16, 2022
+% Last update: May 19, 2022 fixed Pearson correlation computation for
+%              hyperbolic embedding
 %
 %% Loading 5000 node rsfMRI brain network data
 %The above paper explains how it is obtained. 
@@ -62,7 +63,7 @@ xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
 ylabel('Spherical MDS')
 
 
-%% METHOD 3: HYPERBOLIC MDS TO Poincare Disk
+%% METHOD 3: HYPERBOLIC-MDS TO Poincare Disk
 % The method is based on
 % Y. Zhou and T.O. Sharpee. Hyperbolic geometry of gene expression. 
 % Iscience, 24(3):102225, 2021
@@ -75,6 +76,7 @@ for i =1:N
     orig(i,i)=0;      
 end
 orig(orig<0)=0.01;
+%figure; imagesc(orig)
 
 Rmax = 20; % The maximum radius of the Poincare disk
 %add path 'hperbolic-MDS' where fmdscale_hyperbolic.m is located;
@@ -84,45 +86,13 @@ figure_bg('w'); figure_bigger(16)
 rlim
 rticklabels([19 19.05 19.1 19.15 19.2])
 
-%% To be fixed
-%embed_display_hyperbolic.m is not displaying correctly
-%figure; embed_display_hyperbolic(Y,Rmax) % kernel density plot
-%figure_bg('w'); figure_bigger(16); colorbar
-
 % Shepard diagram
-orig = real(acos(rho));
-embed =real(acos(Y'*Y)); 
+[Y_e(:,1),Y_e(:,2)] = pol2cart(Y(:,2),Y(:,1));
+normalized_Y = Y_e./sqrt( sum( Y_e.^2, 2 ) );
+embed =real(acos(normalized_Y*normalized_Y'));
 sc = embed_shepard(orig, embed)
-% Number 0.4125 is Pearson correlation
+% Number 0.0042 is the Pearson correlation
 
 %As the embedding dimension decreases, the performance will suffer and
-%Pearson correlation will decreases.
-
-%% Incomplete. 
-% SPHARM modeling requires building spherical mesh
-
-Y= embed_sphere(rho,2);
-Y=Y+ normrnd(0,0.000001,3,5000); 
-%removes a problem of nonunique embededd point with small random
-%perturbation. If it does not work,slightly increase noise variability.
-
-%The triangulation is based on Delaunay triangulation that build simplices
-%automatically. Related to Rips complex.
-faces = TriangulateSpherePoints(double(Y'));
-embeded.vertices=Y';
-embeded.faces=faces;
-figure;figure_wire(embeded, 'black', 'white');
-
-%% To Do list
-% Need a new visulziation function displaying connected edges of MST of correlation network.
-% You only need to color corresponding edges differently. 
-% There is no gurantee edges in Delaunay triangulation matches the edges in
-% edges of MST of correlation network. This needs to work out
-
-%For circle, we need visualization pipeline like:
-%https://www.pnas.org/doi/10.1073/pnas.1008054107
-%There are bunch of existing codes doing this. 
-
-
-
+%the Pearson correlation will decreases.
 
