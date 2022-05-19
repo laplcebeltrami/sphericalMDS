@@ -11,7 +11,7 @@
 %
 % Created    : April  1, 2022
 % Last update: May 19, 2022 fixed Pearson correlation computation for
-%              hyperbolic embedding
+% hyperbolic embedding
 %
 %% Loading 5000 node rsfMRI brain network data
 %The above paper explains how it is obtained. 
@@ -41,9 +41,9 @@ sc = embed_shepard(orig, embed)
 %Number 0.5148 is Pearson correlation
 
 axis square; %if you want latex formula displayed. 
-xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
+xlabel('Pearson correlations')
 ylabel('Spherical MDS')
-
+print_pdf('spherical-MDS2')
 
 %% METHOD 2: spherical MDS to sphere S^1 circle
 
@@ -59,9 +59,9 @@ sc = embed_shepard(orig, embed)
 % Number 0.4125 is Pearson correlation
 
 axis square; %if you want latex formula displayed. 
-xlabel(['$\cos^{-1}({\bf x}_i {\bf x}_j)$'], 'Interpreter','latex')
+xlabel('Pearson correlations')
 ylabel('Spherical MDS')
-
+print_pdf('spherical-MDS1')
 
 %% METHOD 3: HYPERBOLIC-MDS TO Poincare Disk
 % The method is based on
@@ -81,17 +81,23 @@ orig(orig<0)=0.01;
 Rmax = 20; % The maximum radius of the Poincare disk
 %add path 'hperbolic-MDS' where fmdscale_hyperbolic.m is located;
 [Y,~,~,~] = fmdscale_hyperbolic(orig,2,Rmax,0); % Do hyperbolic MDS
-figure; polarscatter(Y(:,2),Y(:,1)-Rmax+1,'.k') 
+
+%minimum radius is 18.71, maximum radius is 19.30
+figure; polarscatter(Y(:,2),Y(:,1)-Rmax+1.5,'.k') 
 figure_bg('w'); figure_bigger(16)
-rlim
-rticklabels([19 19.05 19.1 19.15 19.2])
+rlim %shows the range of polar coordinates
+rticklabels([18.5 18.7 18.9 19.1 19.3]) 
 
 % Shepard diagram
-[Y_e(:,1),Y_e(:,2)] = pol2cart(Y(:,2),Y(:,1));
-normalized_Y = Y_e./sqrt( sum( Y_e.^2, 2 ) );
-embed =real(acos(normalized_Y*normalized_Y'));
+% geodesics in the Poincare disk
+
+embed = hyperbolic_distance(Y);
 sc = embed_shepard(orig, embed)
-% Number 0.0042 is the Pearson correlation
+axis square; %if you want latex formula displayed. 
+xlabel('Pearson correlations')
+ylabel('Hyperbolic MDS')
+print_pdf('hyperbolic-MDS')
+% Number 0.0501 is the Pearson correlation
 
 %As the embedding dimension decreases, the performance will suffer and
 %the Pearson correlation will decreases.
