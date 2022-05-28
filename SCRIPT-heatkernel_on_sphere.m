@@ -61,27 +61,27 @@ axis square; axis equal
 figure_bg('w'); figure_bigger(16)
 camlight;
 
-%% Heat kernel with bandwith 10
-max_ind = 2; %node index where the peak of heat kernel will be displayed
-heatkernel = sphere_heatkernel(embeded, 20, 10, 200); 
-%heatkernel with degree 100 (more than 10000 basis) at the 2nd node as maxium with bandwith 0.1
-figure; figure_trimesh(embeded,heatkernel, 'rywb') %l-th order 5-th degree
+%% heat kernel with bandwith 0.1 is given as 5000 x 5000 matrix
+% this is probability density across columns and rows. Such a matrix is doubly stochastic
+heatkernel = sphere_heatkernel(sphere, 100, 0.1); 
+%heatkernel with degree 100 (more than 10000 basis) 
+figure; figure_trimesh(embeded,heatkernel(:,20), 'rywb') % showing heat kernel at 20-th node as peak
 hold on; plot3(embeded.vertices(:,1), embeded.vertices(:,2), embeded.vertices(:,3),'.k')
-hold on; plot3(embeded.vertices(max_ind,1), embeded.vertices(max_ind,2), embeded.vertices(max_ind,3),'.k') 
 figure_bg('w'); view([45 45])
 axis square; axis equal
 figure_bg('w'); figure_bigger(16); 
 
-%% heat kernel with bandwith 0.1
-max_ind = 20; %node index where the peak of heat kernel will be displayed
-heatkernel = sphere_heatkernel(embeded, max_ind, 0.1, 200); 
-%heatkernel with degree 100 (more than 10000 basis) at the 2nd node as maxium with bandwith 0.1
-figure; figure_trimesh(embeded,heatkernel, 'rywb') %l-th order 5-th degree
+
+%% heat kernel smoothing by taking scatter points as Dirac delta function
+%this is equivalent to simply summing heat kernel matrix columnwise
+heatkernel = sphere_heatkernel(sphere, 100, 0.01); 
+smoothing=sum(heatkernel,2);
+figure; figure_trimesh(embeded,smoothing, 'rywb') %l-th order 5-th degree
 hold on; plot3(embeded.vertices(:,1), embeded.vertices(:,2), embeded.vertices(:,3),'.k')
-hold on; plot3(embeded.vertices(max_ind,1), embeded.vertices(max_ind,2), embeded.vertices(max_ind,3),'.k') 
-figure_bg('w'); view([45 45])
+view([45 45])
 axis square; axis equal
-figure_bg('w'); figure_bigger(16); 
+figure_bg('w'); figure_bigger(16);
+
 
 
 
