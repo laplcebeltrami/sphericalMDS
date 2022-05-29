@@ -75,7 +75,7 @@ figure_bg('w'); figure_bigger(16);
 %% heat kernel smoothing by taking scatter points as Dirac delta function
 %this is equivalent to simply summing heat kernel matrix columnwise
 heatkernel = sphere_heatkernel(sphere, 100, 0.01); 
-smoothing=sum(heatkernel,2);
+smoothing=sum(heatkernel,2)/5000;
 figure; figure_trimesh(embeded,smoothing, 'rywb') %l-th order 5-th degree
 hold on; plot3(embeded.vertices(:,1), embeded.vertices(:,2), embeded.vertices(:,3),'.k')
 view([45 45])
